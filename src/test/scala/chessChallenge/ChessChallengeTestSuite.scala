@@ -1,5 +1,6 @@
 package chessChallenge
 
+import chessChallenge.ChessPiece.{Bishop, Knight, Queen, Rook}
 import org.scalatest.{FlatSpec, Matchers}
 
 /**
@@ -27,6 +28,15 @@ class ChessChallengeTestSuite extends FlatSpec with Matchers with Solver {
 
   "A chess piece factory" must "return a correct class" in {
     assert(ChessPiece("K", Position(1,1)) == ChessPiece.King(Position(1,1)))
+    val queen = ChessPiece("Q", Position(2,2))
+    val knight = ChessPiece("N", Position(2,4))
+    val bishop = ChessPiece("B", Position(3,3))
+    val rook = ChessPiece("R", Position(3,3))
+
+    queen shouldBe a [Queen]
+    knight shouldBe a [Knight]
+    bishop shouldBe a [Bishop]
+    rook shouldBe a [Rook]
   }
 
   "A chess board class" must "return a chess board class type" in {

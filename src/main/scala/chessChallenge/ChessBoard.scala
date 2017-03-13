@@ -1,10 +1,10 @@
 package chessChallenge
 
 /**
-  * This class represent a chess board
-  * Input:
-  *  M - number of rows
-  *  N - number of columns
+  * This class represent a chessboard
+  *
+  * @param M number of rows
+  * @param N number of cols
   */
 class ChessBoard(var M: Int, var N: Int) {
 
@@ -16,7 +16,13 @@ class ChessBoard(var M: Int, var N: Int) {
     */
   type ChessBoardType = Position => Boolean
 
-  /** Chess board function to test if given position is inside the board */
+  /**
+    * Chess board function to test if given position is inside the board
+    *
+    * @param M number of rows
+    * @param N number of cols
+    * @return function from Position to Boolean
+    */
   def chessBoardFunction(M: Int, N: Int) : Position => Boolean = pos => {
     if (pos.row > M) false
     else if (pos.col > N) false
