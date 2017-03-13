@@ -18,28 +18,36 @@ trait Solver {
         row <- 0 until cb.M
         col <- 0 until cb.N
         piece = ChessPiece(head, Position(row, col))
-        if placed.forall(x => !x.isThreat(piece))
-      } yield piece :: placed
+        if placed.forall(x => !x.isThreat(piece)) && placed.forall(x => !piece.isThreat(x))
+      } yield (piece :: placed).sortBy(x => (x.pos.row, x.pos.col))
   }
 
   def solve(pieces: List[String], cb: ChessBoard): Int = {
     val placement = placePieces(pieces, cb)
 
-    placement.toList.length
+    showSolution(placement, cb)
+
+    placement.size
   }
 
   def showSolution(solution: Set[List[ChessPiece]], cb: ChessBoard) = {
-    val board =
-      for {
-        row <- 0 until cb.M
-      } yield Vector.fill(cb.N)("*").mkString + "\n"
+    println("Number of solutions: " + solution.size)
 
-    val boardWithFigures =
-    for {
-      sol <- solution
-      piece <- sol
-    } yield board.updated(piece.pos.col, piece).mkString
+    for (sol <- solution) {
+      println
+      for (row <- 0 until cb.M) {
+        val rowWithFigures =
+          for {
+            col <- 0 until cb.N
+          } yield {
+            if (sol.exists(x => x.pos.row == row && x.pos.col == col))
+              sol.filter(x => x.pos.row == row && x.pos.col == col).head
+            else "*"
+          }
 
-    boardWithFigures
+        println(rowWithFigures mkString)
+      }
+    }
+
   }
 }

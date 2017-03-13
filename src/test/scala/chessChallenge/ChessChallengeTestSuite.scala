@@ -34,8 +34,18 @@ class ChessChallengeTestSuite extends FlatSpec with Matchers with Solver {
      cb shouldBe a [ChessBoard]
   }
 
-  "Solver " must "return a number of solutions" in {
+  "Solver " must "return a correct number of solutions" in {
     object solution extends Solver
-    assert(4 == solution.solve(List("K", "K"), new ChessBoard(3, 3)))
+    assert(0 == solution.solve(List("K", "K"), new ChessBoard(2, 2)))
+    assert(4 == solution.solve(List("K", "K", "R"), new ChessBoard(3, 3)))
+    assert(6 == solution.solve(List("N", "N"), new ChessBoard(2, 2)))
+    assert(8 == solution.solve(List("R", "R", "N", "N", "N", "N"), new ChessBoard(4, 4)))
   }
+
+  /*
+  "Solver " must "give a correct number of solutions for main challenge" in {
+    object solution extends Solver
+    assert(0 == solution.solve(List("K", "K", "Q", "Q", "B", "B", "N"), new ChessBoard(7, 7)))
+  }
+  */
 }

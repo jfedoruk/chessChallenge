@@ -29,7 +29,7 @@ object ChessPiece {
         j <- -1 to 1
       } yield Position(pos.row + i, pos.col + j)
 
-      kingsRange.exists(x => x.row == piece.pos.row || x.col == piece.pos.col)
+      kingsRange.contains(piece.pos)
     }
 
     override def toString = "K"
@@ -66,7 +66,18 @@ object ChessPiece {
     * Class to represent Knight chess piece
     */
   case class Knight(pos: Position) extends ChessPiece {
-    def isThreat(piece: ChessPiece): Boolean = ???
+    def isThreat(piece: ChessPiece): Boolean = {
+      val knightRangePre =
+        for {
+          i <- -2 to 2
+          j <- -2 to 2
+          if i != 0 && j!= 0 && Math.abs(i) != Math.abs(j)
+        } yield Position(pos.row + i, pos.col + j)
+
+      // Add current position to the list
+      val knightRange = knightRangePre :+ Position(pos.row, pos.col)
+      knightRange.contains(piece.pos)
+    }
 
     override def toString = "N"
   }
