@@ -49,10 +49,12 @@ trait Solver {
     * @param cb chessboard where pieces will be placed
     * @return number of unique solutions for given params
     */
-  def solve(pieces: List[String], cb: ChessBoard): Int = {
+  def solve(pieces: List[String], cb: ChessBoard): (Int, Long) = {
+    val t0 = System.nanoTime()
     val placement = placePieces(pieces, cb)
+    val timeElapsed = System.nanoTime() - t0
 
-    placement.size
+    (placement.size, timeElapsed)
   }
 
   /**

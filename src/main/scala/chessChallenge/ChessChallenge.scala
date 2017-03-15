@@ -28,5 +28,6 @@ object ChessChallenge extends App {
                List.fill(knights.toInt)("N") ::: Nil
 
   object solution extends Solver
-  println("Number of solutions: " + solution.solve(pieces, chessBoardForChallenge))
+  val (nrSolutions, time) =  solution.solve(pieces, chessBoardForChallenge)
+  printf("Number of solutions: %d in %dns\n", nrSolutions, time)
 }
