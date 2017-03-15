@@ -51,7 +51,9 @@ object ChessPiece {
     * @param pos piece position on chessboard
     */
   case class Queen(pos: Position) extends ChessPiece {
-    def isThreat(piece: ChessPiece): Boolean = ???
+    def isThreat(piece: ChessPiece): Boolean =
+      pos.row == piece.pos.row || pos.col == piece.pos.col ||
+      Math.abs(piece.pos.row - pos.row) == Math.abs(piece.pos.col - pos.col)
 
     override def toString = "Q"
   }
@@ -61,7 +63,9 @@ object ChessPiece {
     * @param pos piece position on chessboard
     */
   case class Bishop(pos: Position) extends ChessPiece {
-    def isThreat(piece: ChessPiece): Boolean = ???
+    def isThreat(piece: ChessPiece): Boolean =
+      Math.abs(piece.pos.row - pos.row) == Math.abs(piece.pos.col - pos.col)
+
 
     override def toString = "B"
   }

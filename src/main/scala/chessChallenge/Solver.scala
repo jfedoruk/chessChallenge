@@ -1,5 +1,7 @@
 package chessChallenge
 
+import scala.annotation.tailrec
+
 /**
   * This trait implements solver for Chess Challenge
   */
@@ -50,8 +52,6 @@ trait Solver {
   def solve(pieces: List[String], cb: ChessBoard): Int = {
     val placement = placePieces(pieces, cb)
 
-    showSolution(placement, cb)
-
     placement.size
   }
 
@@ -76,7 +76,7 @@ trait Solver {
             else "*"
           }
 
-        println(rowWithFigures mkString)
+        println(rowWithFigures.mkString)
       }
     }
 

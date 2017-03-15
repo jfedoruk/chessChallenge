@@ -9,13 +9,21 @@ matter, and that there are no pawns among the pieces.
 
 Clone repo, use sbt to download necessary libs and run the project.
 
+```
+$ sbt
+> run
+```
+
 ### Prerequisites
 
 No special prerequisites needed.
 
 ## Running the tests
 
-TBD
+```
+$ sbt
+> test
+```
 
 ## Authors
 
