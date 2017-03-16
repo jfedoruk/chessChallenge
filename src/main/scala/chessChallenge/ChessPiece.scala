@@ -34,13 +34,7 @@ object ChessPiece {
     */
   case class King(pos: Position) extends ChessPiece {
     def isThreat(piece: ChessPiece): Boolean = {
-      val kingsRange =
-        for {
-        i <- -1 to 1
-        j <- -1 to 1
-      } yield Position(pos.row + i, pos.col + j)
-
-      kingsRange.contains(piece.pos)
+      Math.abs(piece.pos.col - pos.col) <= 1 && Math.abs(piece.pos.row - pos.row) <=1
     }
 
     override def toString = "K"
@@ -65,7 +59,6 @@ object ChessPiece {
   case class Bishop(pos: Position) extends ChessPiece {
     def isThreat(piece: ChessPiece): Boolean =
       Math.abs(piece.pos.row - pos.row) == Math.abs(piece.pos.col - pos.col)
-
 
     override def toString = "B"
   }
