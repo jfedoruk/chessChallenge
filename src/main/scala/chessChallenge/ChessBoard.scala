@@ -29,6 +29,20 @@ class ChessBoard(var M: Int, var N: Int) {
     else true
   }
 
+  /**
+    * Return sequence of free chessboard fields
+    *
+    * @param placed chess pieces placed
+    * @return Sequence of free Positions
+    */
+  def freePlaces(placed: List[ChessPiece]) : Seq[Position] = {
+    for {
+      i <- 0 until M
+      j <- 0 until N
+      if !placed.exists(x => x.pos.row == i && x.pos.col == j)
+    } yield Position(i, j)
+  }
+
   /** Chess board for the challenge */
   val chessBoard: ChessBoardType = chessBoardFunction(M, N)
 

@@ -1,7 +1,5 @@
 package chessChallenge
 
-import scala.annotation.tailrec
-
 /**
   * This trait implements solver for Chess Challenge
   */
@@ -27,16 +25,26 @@ trait Solver {
     * @param cb chessboard where pieces will be placed
     * @return set of solutions for given input params
     */
-  def placePieces(pieces: List[String], cb: ChessBoard) : Set[List[ChessPiece]] = pieces match {
+  def placePieces(pieces: List[String], cb: ChessBoard): Set[List[ChessPiece]] =  pieces match {
     case Nil => Set(List())
     case head :: tail =>
       for {
         placed <- placePieces(tail, cb)
-        row <- 0 until cb.M
-        col <- 0 until cb.N
-        piece = ChessPiece(head, Position(row, col))
-        if placed.forall(x => !x.isThreat(piece)) && placed.forall(x => !piece.isThreat(x))
+        position <- cb.freePlaces(placed)
+        piece = ChessPiece(head, position)
+        if checkIfSafe(piece, placed)
       } yield (piece :: placed).sortBy(x => (x.pos.row, x.pos.col))
+  }
+
+  /**
+    * Checke if given piece is safe to place among already placed pieces.
+    *
+    * @param piece piece to place
+    * @param placed already placed pieces
+    * @return True if piece is safe to place
+    */
+  def checkIfSafe(piece: ChessPiece, placed: List[ChessPiece]) : Boolean = {
+    placed.forall(x => !x.isThreat(piece)) && placed.forall(x => !piece.isThreat(x))
   }
 
   /**
