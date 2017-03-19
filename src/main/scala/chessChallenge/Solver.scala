@@ -1,14 +1,16 @@
 package chessChallenge
 
+import scala.annotation.tailrec
+
 /**
   * This trait implements solver for Chess Challenge
   */
 trait Solver {
 
   /**
-    * Holds list of solutions
+    * Type for list of solutions
     */
-  val solution: Set[List[ChessPiece]] = Set(List())
+  type Solutions = Set[List[ChessPiece]]
 
   /**
     * This functions place all the pieces on the given chess board.
@@ -25,7 +27,7 @@ trait Solver {
     * @param cb chessboard where pieces will be placed
     * @return set of solutions for given input params
     */
-  def placePieces(pieces: List[String], cb: ChessBoard): Set[List[ChessPiece]] =  pieces match {
+  def placePieces(pieces: List[String], cb: ChessBoard): Solutions =  pieces match {
     case Nil => Set(List())
     case head :: tail =>
       for {
@@ -37,7 +39,7 @@ trait Solver {
   }
 
   /**
-    * Checke if given piece is safe to place among already placed pieces.
+    * Check if given piece is safe to place among already placed pieces.
     *
     * @param piece piece to place
     * @param placed already placed pieces
@@ -71,7 +73,7 @@ trait Solver {
     * @param solution set of solutions
     * @param cb chessboard where pieces are placed
     */
-  def showSolution(solution: Set[List[ChessPiece]], cb: ChessBoard) = {
+  def showSolution(solution: Solutions, cb: ChessBoard) = {
     println("Number of solutions: " + solution.size)
 
     for (sol <- solution) {
@@ -89,6 +91,102 @@ trait Solver {
         println(rowWithFigures.mkString)
       }
     }
+  }
 
+  /**
+    * This functions place piece on the given chess board.
+    *
+    * Piece will be placed only if it does not threat other
+    * already placed pieces. Also the piece cannot threat other
+    * pieces after taking the position on the board.
+    *
+    * Result of the operation is sorted to eliminate duplications.
+    *
+    * @param piece piece to be placed
+    * @param alreadyPlaced pieces already placed
+    * @param cb chessboard for challenge
+    * @return set of solutions for given input
+    */
+  def placePieceForSolution(piece: String, alreadyPlaced: List[ChessPiece], cb: ChessBoard) : Solutions = {
+    cb.freePlaces(alreadyPlaced).filter(x => checkIfSafe(ChessPiece(piece, x), alreadyPlaced)) match {
+      case Nil => Set[List[ChessPiece]]()
+      case newPlacement =>
+        newPlacement.map(x => (ChessPiece(piece, x) :: alreadyPlaced)
+          .sortBy(y => (y.pos.row, y.pos.col)))
+          .toSet
+    }
+  }
+
+  /**
+    * This method generate solutions for current situation on the chessboard.
+    *
+    * For each already generated solution method will try to put another piece.
+    * If successful will generate a new solution including the piece.
+    *
+    * @param piece piece to be placed
+    * @param solutions set of solutions produced in previous step
+    * @param alreadyPlaced pieces already placed
+    * @param cb chessboard for challenge
+    * @return set of solutions for given input
+    */
+  def generateSolutions(
+                         piece: String,
+                         solutions: Solutions,
+                         alreadyPlaced: List[ChessPiece],
+                         cb: ChessBoard): Solutions = {
+
+    @tailrec
+    def innerGenerateSolution(piece: String,
+                              solutions: Solutions,
+                              alreadyPlaced: List[ChessPiece],
+                              cb: ChessBoard,
+                              newSolutions: Solutions): Solutions = solutions.toList match {
+        case Nil =>
+          if (newSolutions.isEmpty) placePieceForSolution(piece, alreadyPlaced, cb)
+          else newSolutions
+        case singleSolution :: solutionsTail =>
+          val placed = placePieceForSolution(piece, singleSolution, cb).filter(_.length != alreadyPlaced.length)
+          innerGenerateSolution(piece, solutionsTail.toSet, singleSolution, cb, placed ++ newSolutions)
+      }
+    innerGenerateSolution(piece, solutions, alreadyPlaced, cb, Set[List[ChessPiece]]())
+  }
+
+  /**
+    * This method places all the pieces on given chessboard.
+    *
+    * Each piece is placed on the board one by one. Result of this operation is
+    * given as input to next iteration.
+    *
+    * @param pieces pieces to place on chessboard
+    * @param cb chessboard for challenge
+    * @return set of solutions for given input
+    */
+  def placePieces2(pieces: List[String], cb: ChessBoard) : Solutions = {
+    @tailrec
+    def doPlace(pieces: List[String], solutions: Solutions) : Solutions = pieces match {
+      case Nil => solutions
+      case head :: tail =>
+        val solutionsTemp: Solutions = generateSolutions(head, solutions, List(), cb)
+        doPlace(tail, solutionsTemp)
+    }
+    doPlace(pieces.sorted, Set[List[ChessPiece]]())
+  }
+
+  /**
+    * This method calls a 2nd implementation of algorithm
+    *
+    * Runs placement method on given params and print the results in
+    * human-friendly way.
+    *
+    * @param pieces list of pieces to be placed
+    * @param cb chessboard where pieces will be placed
+    * @return number of unique solutions for given params
+    */
+  def solve2(pieces: List[String], cb: ChessBoard): (Int, Long) = {
+    val t0 = System.nanoTime()
+    val placement = placePieces2(pieces, cb)
+    val timeElapsed = System.nanoTime() - t0
+
+    (placement.size, timeElapsed)
   }
 }

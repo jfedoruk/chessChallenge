@@ -47,17 +47,60 @@ class ChessChallengeTestSuite extends FlatSpec with Matchers with Solver {
   "Solver " must "return a correct number of solutions" in {
     object solution extends Solver
     assert(0 == solution.solve(List("K", "K"), new ChessBoard(2, 2))._1)
+    assert(2 == solution.solve(List("R", "R"), new ChessBoard(2, 2))._1)
     assert(4 == solution.solve(List("K", "K", "R"), new ChessBoard(3, 3))._1)
     assert(6 == solution.solve(List("N", "N"), new ChessBoard(2, 2))._1)
     assert(4 == solution.solve(List("B", "B"), new ChessBoard(2, 2))._1)
     assert(0 == solution.solve(List("Q", "Q"), new ChessBoard(2, 2))._1)
     assert(8 == solution.solve(List("Q", "Q"), new ChessBoard(3, 3))._1)
+    assert(6 == solution.solve(List("R", "R", "N"), new ChessBoard(3, 3))._1)
     assert(8 == solution.solve(List("R", "R", "N", "N", "N", "N"), new ChessBoard(4, 4))._1)
+  }
+
+  "Solver " must "return a correct number of solutions using 2nd algorithm" in {
+    object solution extends Solver
+    assert(0 == solution.solve2(List("K", "K"), new ChessBoard(2, 2))._1)
+    assert(2 == solution.solve2(List("R", "R"), new ChessBoard(2, 2))._1)
+    assert(4 == solution.solve2(List("K", "K", "R"), new ChessBoard(3, 3))._1)
+    assert(6 == solution.solve2(List("N", "N"), new ChessBoard(2, 2))._1)
+    assert(4 == solution.solve2(List("B", "B"), new ChessBoard(2, 2))._1)
+    assert(0 == solution.solve2(List("Q", "Q"), new ChessBoard(2, 2))._1)
+    assert(8 == solution.solve2(List("Q", "Q"), new ChessBoard(3, 3))._1)
+    assert(6 == solution.solve2(List("R", "R", "N"), new ChessBoard(3, 3))._1)
+    assert(8 == solution.solve2(List("R", "R", "N", "N", "N", "N"), new ChessBoard(4, 4))._1)
   }
 
   "Solver " must "give a correct number of solutions for main challenge" in {
     object solution extends Solver
     assert(3063828 == solution.solve(List("K", "K", "Q", "Q", "B", "B", "N"), new ChessBoard(7, 7))._1)
+  }
+
+  "New algorithm " should "be faster than old one" in {
+    object solution extends Solver
+
+    var totalTimeOld = 0L
+
+    for (i <- 0 until 100)
+    {
+      val t0 = System.nanoTime()
+      solution.solve(List("R", "R", "N", "N", "N", "N"), new ChessBoard(4, 4))._1
+      totalTimeOld += (System.nanoTime() - t0)
+    }
+
+    println("Old method:" + totalTimeOld / 100)
+
+    var totalTimeNew = 0L
+
+    for (i <- 0 until 100)
+    {
+      val t0 = System.nanoTime()
+      solution.solve2(List("R", "R", "N", "N", "N", "N"), new ChessBoard(4, 4))._1
+      totalTimeNew += (System.nanoTime() - t0)
+    }
+
+    println("New method:" + totalTimeNew / 100)
+
+    assert(totalTimeNew < totalTimeOld)
   }
 
 }
