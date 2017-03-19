@@ -46,6 +46,7 @@ class ChessChallengeTestSuite extends FlatSpec with Matchers with Solver {
 
   "Solver " must "return a correct number of solutions" in {
     object solution extends Solver
+    assert(0 == solution.solve(List(), new ChessBoard(2, 2))._1)
     assert(0 == solution.solve(List("K", "K"), new ChessBoard(2, 2))._1)
     assert(2 == solution.solve(List("R", "R"), new ChessBoard(2, 2))._1)
     assert(4 == solution.solve(List("K", "K", "R"), new ChessBoard(3, 3))._1)
@@ -80,25 +81,25 @@ class ChessChallengeTestSuite extends FlatSpec with Matchers with Solver {
 
     var totalTimeOld = 0L
 
-    for (i <- 0 until 100)
+    for (i <- 0 until 10)
     {
       val t0 = System.nanoTime()
-      solution.solve(List("R", "R", "N", "N", "N", "N"), new ChessBoard(4, 4))._1
+      solution.solve(List("K", "K", "Q", "Q", "B", "B", "N"), new ChessBoard(6, 6))
       totalTimeOld += (System.nanoTime() - t0)
     }
 
-    println("Old method:" + totalTimeOld / 100)
+    println("Old method:" + totalTimeOld / 10)
 
     var totalTimeNew = 0L
 
-    for (i <- 0 until 100)
+    for (i <- 0 until 10)
     {
       val t0 = System.nanoTime()
-      solution.solve2(List("R", "R", "N", "N", "N", "N"), new ChessBoard(4, 4))._1
+      solution.solve2(List("K", "K", "Q", "Q", "B", "B", "N"), new ChessBoard(6, 6))
       totalTimeNew += (System.nanoTime() - t0)
     }
 
-    println("New method:" + totalTimeNew / 100)
+    println("New method:" + totalTimeNew / 10)
 
     assert(totalTimeNew < totalTimeOld)
   }

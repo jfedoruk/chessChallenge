@@ -36,14 +36,22 @@ class ChessBoard(var M: Int, var N: Int) {
     * @return Sequence of free Positions
     */
   def freePlaces(placed: List[ChessPiece]) : Seq[Position] = {
+    chessBoardFields diff occupiedFields filter(
+      x => !placed.exists(y => y.pos.row == x.row && y.pos.col == x.col))
+  }
+
+  /** Fields already occupied */
+  var occupiedFields: Seq[Position] = Seq()
+
+  /** All chess board fields */
+  val chessBoardFields: Seq[Position] = {
     for {
       i <- 0 until M
       j <- 0 until N
-      if !placed.exists(x => x.pos.row == i && x.pos.col == j)
     } yield Position(i, j)
   }
 
   /** Chess board for the challenge */
   val chessBoard: ChessBoardType = chessBoardFunction(M, N)
-
 }
+
