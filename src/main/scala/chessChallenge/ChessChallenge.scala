@@ -8,26 +8,31 @@ import scala.io.StdIn
 object ChessChallenge extends App {
 
   println("Welcome to Chess Challenge Solver!")
-  val M = StdIn.readLine("Please provide the 1st dimension of the board M:")
-  val N = StdIn.readLine("Please provide the 2nd dimension of the board N:")
-  val kings = StdIn.readLine("Please provide number of Kings:")
-  val queens = StdIn.readLine("Please provide number of Queens:")
-  val bishops = StdIn.readLine("Please provide number of Bishops:")
-  val rooks = StdIn.readLine("Please provide number of Rooks:")
-  val knights = StdIn.readLine("Please provide number of Knights:")
+  try {
+    val M = StdIn.readLine("Please provide the 1st dimension of the board M:").toInt
+    val N = StdIn.readLine("Please provide the 2nd dimension of the board N:").toInt
+    val kings = StdIn.readLine("Please provide number of Kings:").toInt
+    val queens = StdIn.readLine("Please provide number of Queens:").toInt
+    val bishops = StdIn.readLine("Please provide number of Bishops:").toInt
+    val rooks = StdIn.readLine("Please provide number of Rooks:").toInt
+    val knights = StdIn.readLine("Please provide number of Knights:").toInt
 
-  println()
-  printf(s"Board is: $M x $N")
-  println()
+    println()
+    printf(s"Board is: $M x $N")
+    println()
 
-  val chessBoardForChallenge = new ChessBoard(M.toInt, N.toInt)
-  val pieces = List.fill(kings.toInt)("K") :::
-               List.fill(queens.toInt)("Q") :::
-               List.fill(bishops.toInt)("B") :::
-               List.fill(rooks.toInt)("R") :::
-               List.fill(knights.toInt)("N") ::: Nil
+    val chessBoardForChallenge = new ChessBoard(M, N)
+    val pieces = List.fill(kings.toInt)("K") :::
+                 List.fill(queens.toInt)("Q") :::
+                 List.fill(bishops.toInt)("B") :::
+                 List.fill(rooks.toInt)("R") :::
+                 List.fill(knights.toInt)("N") ::: Nil
 
-  object solution extends Solver
-  val (nrSolutions, time) =  solution.solve(pieces, chessBoardForChallenge)
-  printf("Number of solutions: %d in %dns\n", nrSolutions, time)
+    object solution extends Solver
+    val (nrSolutions, time) =  solution.solve(pieces, chessBoardForChallenge)
+    printf("Number of solutions: %d in %dns\n", nrSolutions, time)
+  }  catch {
+    case exception: Throwable => println("Wrong input argument! Got exception: " + exception)
+  }
+
 }
