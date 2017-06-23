@@ -13,32 +13,6 @@ trait Solver {
   type Solutions = Set[List[ChessPiece]]
 
   /**
-    * This functions place all the pieces on the given chess board.
-    *
-    * Each piece will be placed only if it does not threat other
-    * already placed pieces. Also the piece cannot threat other
-    * pieces after taking the position on the board.
-    *
-    * Result of the operation is sorted to eliminate duplications.
-    *
-    * Note: this is a recursive function
-    *
-    * @param pieces list of pieces to be placed
-    * @param cb chessboard where pieces will be placed
-    * @return set of solutions for given input params
-    */
-  def placePieces(pieces: List[String], cb: ChessBoard): Solutions =  pieces match {
-    case Nil => Set(List())
-    case head :: tail =>
-      for {
-        placed <- placePieces(tail, cb)
-        position <- cb.freePlaces(placed)
-        piece = ChessPiece(head, position)
-        if checkIfSafe(piece, placed)
-      } yield (piece :: placed).sortBy(x => (x.pos.row, x.pos.col))
-  }
-
-  /**
     * Check if given piece is safe to place among already placed pieces.
     *
     * @param piece piece to place
@@ -47,26 +21,6 @@ trait Solver {
     */
   def checkIfSafe(piece: ChessPiece, placed: List[ChessPiece]) : Boolean = {
     placed.forall(x => !x.isThreat(piece)) && placed.forall(x => !piece.isThreat(x))
-  }
-
-  /**
-    * This is the main method of Solver trait.
-    *
-    * Runs placement method on given params and print the results in
-    * human-friendly way.
-    *
-    * @param pieces list of pieces to be placed
-    * @param cb chessboard where pieces will be placed
-    * @return number of unique solutions for given params
-    */
-  def solve(pieces: List[String], cb: ChessBoard): (Int, Long) = {
-    if (pieces.isEmpty) (0, 0)
-    else {
-      val t0 = System.nanoTime()
-      val placement = placePieces(pieces, cb)
-      val timeElapsed = System.nanoTime() - t0
-      (placement.size, timeElapsed)
-    }
   }
 
   /**
@@ -122,7 +76,7 @@ trait Solver {
   def generateSolutionForPiece(piece: ChessPiece, piecesToPlace: List[String], cb: ChessBoard, alreadyPlaced: List[ChessPiece]) : Solutions = {
     cb.occupiedFields = (piece :: alreadyPlaced).map(_.pos)
     if (piecesToPlace.isEmpty) Set((piece :: alreadyPlaced).sortBy(x => (x.pos.row, x.pos.col)))
-    else placePieces2(piecesToPlace, piece :: alreadyPlaced, cb)
+    else placePieces(piecesToPlace, piece :: alreadyPlaced, cb)
   }
 
   /**
@@ -168,7 +122,7 @@ trait Solver {
     * @param cb chessboard for challenge
     * @return set of solutions for given input
     */
-  def placePieces2(pieces: List[String], alreadyPlaced: List[ChessPiece], cb: ChessBoard) : Solutions =  pieces match {
+  def placePieces(pieces: List[String], alreadyPlaced: List[ChessPiece], cb: ChessBoard) : Solutions =  pieces match {
       case Nil => Set()
       case head :: tail =>
         val possiblePlaces = findPlaceForPiece(head, alreadyPlaced, cb)
@@ -185,11 +139,11 @@ trait Solver {
     * @param cb chessboard where pieces will be placed
     * @return number of unique solutions for given params
     */
-  def solve2(pieces: List[String], cb: ChessBoard): (Int, Long) = {
+  def solve(pieces: List[String], cb: ChessBoard): (Int, Long) = {
     if (pieces.isEmpty) (0, 0)
     else {
       val t0 = System.nanoTime()
-      val placement = placePieces2(pieces, List(), cb)
+      val placement = placePieces(pieces, List(), cb)
       val timeElapsed = System.nanoTime() - t0
 
       (placement.size, timeElapsed)
