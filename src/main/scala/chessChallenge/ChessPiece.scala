@@ -10,6 +10,7 @@ sealed trait ChessPiece {
 
   /**
     * Function to check if this piece is a threat for other piece on the board
+    *
     * @param piece chess piece to check for threat
     * @return True if chess piece is at threat
     */
@@ -30,11 +31,12 @@ object ChessPiece {
 
   /**
     * Class to represent King chess piece
+    *
     * @param pos piece position on chessboard
     */
   case class King(pos: Position) extends ChessPiece {
     def isThreat(piece: ChessPiece): Boolean = {
-      Math.abs(piece.pos.col - pos.col) <= 1 && Math.abs(piece.pos.row - pos.row) <=1
+      Math.abs(piece.pos.col - pos.col) <= 1 && Math.abs(piece.pos.row - pos.row) <= 1
     }
 
     override def toString = "K"
@@ -42,18 +44,20 @@ object ChessPiece {
 
   /**
     * Class to represent Queen chess piece
+    *
     * @param pos piece position on chessboard
     */
   case class Queen(pos: Position) extends ChessPiece {
     def isThreat(piece: ChessPiece): Boolean =
       pos.row == piece.pos.row || pos.col == piece.pos.col ||
-      Math.abs(piece.pos.row - pos.row) == Math.abs(piece.pos.col - pos.col)
+        Math.abs(piece.pos.row - pos.row) == Math.abs(piece.pos.col - pos.col)
 
     override def toString = "Q"
   }
 
   /**
     * Class to represent Bishop chess piece
+    *
     * @param pos piece position on chessboard
     */
   case class Bishop(pos: Position) extends ChessPiece {
@@ -65,6 +69,7 @@ object ChessPiece {
 
   /**
     * Class to represent Rook chess piece
+    *
     * @param pos piece position on chessboard
     */
   case class Rook(pos: Position) extends ChessPiece {
@@ -75,6 +80,7 @@ object ChessPiece {
 
   /**
     * Class to represent Knight chess piece
+    *
     * @param pos piece position on chessboard
     */
   case class Knight(pos: Position) extends ChessPiece {
@@ -83,7 +89,7 @@ object ChessPiece {
         for {
           i <- -2 to 2
           j <- -2 to 2
-          if i != 0 && j!= 0 && Math.abs(i) != Math.abs(j)
+          if i != 0 && j != 0 && Math.abs(i) != Math.abs(j)
         } yield Position(pos.row + i, pos.col + j)
 
       // Add current position to the list
@@ -97,16 +103,16 @@ object ChessPiece {
   /**
     * This is a Factory method for ChessPiece
     *
-    * @param s name of the case class
+    * @param s   name of the case class
     * @param pos position of chess piece
     * @return new object of given case class type
     */
   def apply(s: String, pos: Position): ChessPiece = s match {
-    case "K" => new King(pos)
-    case "Q" => new Queen(pos)
-    case "B" => new Bishop(pos)
-    case "R" => new Rook(pos)
-    case "N" => new Knight(pos)
+    case "K" => King(pos)
+    case "Q" => Queen(pos)
+    case "B" => Bishop(pos)
+    case "R" => Rook(pos)
+    case "N" => Knight(pos)
     case _ => throw new RuntimeException // Something went wrong
   }
 

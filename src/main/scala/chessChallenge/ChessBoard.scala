@@ -23,7 +23,7 @@ class ChessBoard(var M: Int, var N: Int) {
     * @param N number of cols
     * @return function from Position to Boolean
     */
-  def chessBoardFunction(M: Int, N: Int) : Position => Boolean = pos => {
+  def chessBoardFunction(M: Int, N: Int): Position => Boolean = pos => {
     if (pos.row > M) false
     else if (pos.col > N) false
     else true
@@ -35,13 +35,13 @@ class ChessBoard(var M: Int, var N: Int) {
     * @param placed chess pieces placed
     * @return Sequence of free Positions
     */
-  def freePlaces(placed: List[ChessPiece]) : Seq[Position] = {
-    chessBoardFields diff occupiedFields filter(
+  def freePlaces(placed: List[ChessPiece]): Seq[Position] = {
+    chessBoardFields diff occupiedFields filter (
       x => !placed.exists(y => y.pos.row == x.row && y.pos.col == x.col))
   }
 
   /** Fields already occupied */
-  var occupiedFields: Seq[Position] = Seq()
+  val occupiedFields: Seq[Position] = Seq()
 
   /** All chess board fields */
   val chessBoardFields: Seq[Position] = {

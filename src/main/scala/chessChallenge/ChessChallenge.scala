@@ -23,15 +23,15 @@ object ChessChallenge extends App {
 
     val chessBoardForChallenge = new ChessBoard(M, N)
     val pieces = List.fill(kings.toInt)("K") :::
-                 List.fill(queens.toInt)("Q") :::
-                 List.fill(bishops.toInt)("B") :::
-                 List.fill(rooks.toInt)("R") :::
-                 List.fill(knights.toInt)("N") ::: Nil
+      List.fill(queens.toInt)("Q") :::
+      List.fill(bishops.toInt)("B") :::
+      List.fill(rooks.toInt)("R") :::
+      List.fill(knights.toInt)("N") ::: Nil
 
     object solution extends Solver
-    val (nrSolutions, time) =  solution.solve(pieces, chessBoardForChallenge)
+    val (nrSolutions, time) = solution.solve(pieces, chessBoardForChallenge)
     printf("Number of solutions: %d in %dns\n", nrSolutions, time)
-  }  catch {
+  } catch {
     case exception: Throwable => println("Wrong input argument! Got exception: " + exception)
   }
 
